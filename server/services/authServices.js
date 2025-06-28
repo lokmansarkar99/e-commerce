@@ -30,7 +30,7 @@ export const createUser = async ({name, email, password}) => {
             password: hashedPassword
         }
     })
-
+    await console.log(newUser)
     return newUser
 }
 

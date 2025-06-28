@@ -1,5 +1,5 @@
 
-import { registerUser } from "controllers/authController.js";
+import { registerUser } from "../controllers/authController.js";
 import express from "express";
 
 
