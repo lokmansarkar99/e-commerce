@@ -35,7 +35,7 @@ export const createUser = async ({name, email, password}) => {
 }
 
 
-export const validateUserPassword = async (plainPassword, hashedPassword) => {
+export const validateUserPassword = async (hashedPassword, plainPassword ) => {
     return await argon2.verify(hashedPassword, plainPassword)
 }
 
