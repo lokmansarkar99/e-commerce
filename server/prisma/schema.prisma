@@ -57,6 +57,7 @@ model Product {
   price       Float
   stock       Int
   image       String    @db.VarChar(255)
+  imagePublicId String?
   createdAt   DateTime  @default(now())
   updatedAt   DateTime  @updatedAt
   category    Category  @relation(fields: [categoryId], references: [id])

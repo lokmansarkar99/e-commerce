@@ -5,6 +5,8 @@ import dotenv from 'dotenv';
 import { connectDB } from "./controllers/prismaController.js";
 import authRoutes from './routes/authRoutes.js'
 import userRoutes from './routes/userRoutes.js'
+import  productRoutes  from './routes/productRoutes.js'
+import categoyRoutes from './routes/categoryRoutes.js'
 
 dotenv.config();
 
@@ -19,6 +21,9 @@ app.use(cookieParser())
 // Routes
 app.use('/api/auth',authRoutes )
 app.use('/api/user', userRoutes)
+app.use('/api/product', productRoutes)
+app.use('/api/category', categoyRoutes)
+
 
 
 
