@@ -79,8 +79,9 @@ export const loginUser = async (req, res) => {
     // set cookie 
     res.cookie("access_token", accessToken,{...baseCookie, maxAge: 15 * 60 * 1000})
     res.cookie("refresh_token", refreshToken, {...baseCookie, maxAge: 7 * 24 * 60 * 60 * 1000})
+    
 
-    res.status(200).json({message: "Login Successful ", user: { accessTokenPayload}})
+    res.status(200).json({message: "Login Successful ", user: { id: user.id, email: user.email, role: user.role}})
   } catch (error) {
     console.log(error)
   }
