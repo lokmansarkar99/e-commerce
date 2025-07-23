@@ -2,7 +2,7 @@
 import { verifyAuth } from "../middleware/verifyAuth.js";
 import { loginUser, logoutUser, registerUser } from "../controllers/authController.js";
 import express from "express";
-import { isAdmin, isUser } from "../middleware/roleAuth.js";
+
 
 
 const router = express.Router();

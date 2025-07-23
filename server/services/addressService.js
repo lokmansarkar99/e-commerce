@@ -9,7 +9,7 @@ export const createAddress = async (userId, data) => {
 export const getAddresses = async (userId) => {
   return await prisma.address.findMany({
     where: { userId },
-    orderBy: { isDefault: 'desc' },
+    
   });
 };
 

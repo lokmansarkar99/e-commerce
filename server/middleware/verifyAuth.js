@@ -53,6 +53,7 @@ try {
             role: user.role
         }
         console.log("User from refresh token ", req.user)
+       
 
         return next()
 

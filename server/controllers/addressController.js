@@ -1,4 +1,4 @@
-import {createAddress, getAddresses, getAddressById, deleteAddress, setDefaultAddress} from "../services/addressService.js";
+import {createAddress, getAddresses, getAddressById, deleteAddress, setDefaultAddress, updateAddress} from "../services/addressService.js";
 
 export const addAddressController = async (req, res) => {
   const userId = req.user.id;
