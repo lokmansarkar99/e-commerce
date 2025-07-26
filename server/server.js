@@ -8,6 +8,7 @@ import userRoutes from './routes/userRoutes.js'
 import  productRoutes  from './routes/productRoutes.js'
 import categoyRoutes from './routes/categoryRoutes.js'
 import addressRoutes from './routes/addressRoutes.js'
+import orderRoutes from './routes/orderRoutes.js'
 
 dotenv.config();
 
@@ -25,6 +26,7 @@ app.use('/api/user', userRoutes)
 app.use('/api/product', productRoutes)
 app.use('/api/category', categoyRoutes)
 app.use('/api/address', addressRoutes)
+app.use('/api/order', orderRoutes)
 
 
 
