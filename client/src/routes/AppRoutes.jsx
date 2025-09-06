@@ -16,11 +16,14 @@ import UserDashboard from '../pages/User/UserDashboard'
 
 
 // Admin Pages
-import AdminHome from '../pages/Admin/AdminHome'
+import AdminDashboard from '../pages/Admin/AdminDashboard'
 import ManageProducts from '../pages/Admin/ManageProducts'
 import ManageOrders   from '../pages/Admin/ManageOrders'
 import ManageUsers from '../pages/Admin/ManageUsers'
 
+
+
+import ProtectedRoute from '../components/ProtectedRoute'
 const router = createBrowserRouter([
     {
         path: '/', 
@@ -38,13 +41,15 @@ const router = createBrowserRouter([
             {path: "checkout", element: <Checkout />},
             {path: "orders", element: <MyOrders />},
             {path: "orders/:id", element: <OrderDetails />},
-            {path: "dashboard", element: <UserDashboard />},
+            {path: "dashboard", element: <ProtectedRoute><UserDashboard /></ProtectedRoute>},
 
             // Admin Routes
-            {path: "admin", element: <AdminHome />},
-            {path: "admin/products", element: <ManageProducts />},
-            {path: "admin/orders", element: <ManageOrders />},
-            {path: "admin/users", element: <ManageUsers />}
+            {path: "/admin", element: <ProtectedRoute><AdminDashboard /></ProtectedRoute> , children: [
+                { index: true, element: <ManageProducts /> },
+                { path: "orders", element: <ManageOrders /> },
+                { path: "users", element: <ManageUsers /> }
+                
+            ]} 
         ]
     }
 ])
