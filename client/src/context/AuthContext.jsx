@@ -7,13 +7,14 @@ export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null)
   const [loading, setLoading] = useState(true)
 
-  // Configure axios to send cookies
+  // Configure axios to send cookies with every request
   axios.defaults.withCredentials = true
+  axios.defaults.baseURL = "http://localhost:3000/api"
 
   // Fetch user if already logged in (via refresh token)
   const fetchUser = async () => {
     try {
-      const res = await axios.get("http://localhost:3000/api/auth/me") // backend should return req.user
+      const res = await axios.get("/user/me")
       setUser(res.data.user)
       return res.data.user
     } catch (err) {
@@ -29,24 +30,24 @@ export const AuthProvider = ({ children }) => {
   }, [])
 
   const login = async (email, password) => {
-    const res = await axios.post("http://localhost:3000/api/auth/login", { email, password })
+    const res = await axios.post("/auth/login", { email, password })
     setUser(res.data.user) // backend sends user info
     return res.data.user
   }
 
   const signup = async (data) => {
-    const res = await axios.post("http://localhost:3000/api/auth/signup", data)
+    const res = await axios.post("/auth/signup", data)
     setUser(res.data.user)
     return res.data.user
   }
 
   const logout = async () => {
-    await axios.post("http://localhost:3000/api/auth/logout")
+    await axios.post("/auth/logout")
     setUser(null)
   }
 
   return (
-    <AuthContext.Provider value={{ user, loading, login, signup, logout }}>
+    <AuthContext.Provider value={{ user, setUser, loading, login, signup, logout }}>
       {children}
     </AuthContext.Provider>
   )
