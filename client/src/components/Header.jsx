@@ -2,11 +2,13 @@ import { Link, useNavigate } from "react-router"
 import { Search, User, Heart, ShoppingCart, Menu, X, LogOut } from "lucide-react"
 import { useState } from "react"
 import { useAuth } from "../context/AuthContext"
+import { useSearch } from "../context/SearchContext" // import search context
 
 export default function Header() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
   const [isAccountMenuOpen, setIsAccountMenuOpen] = useState(false)
   const { user, logout } = useAuth()
+  const { search, setSearch } = useSearch() // get search state
   const navigate = useNavigate()
 
   const toggleMobileMenu = () => setIsMobileMenuOpen(prev => !prev)
@@ -16,6 +18,11 @@ export default function Header() {
     await logout()
     setIsAccountMenuOpen(false)
     navigate("/login")
+  }
+
+  const handleSearchSubmit = (e) => {
+    e.preventDefault()
+    navigate("/products") // redirect to products page
   }
 
   // Account redirect route
@@ -50,21 +57,22 @@ export default function Header() {
 
         {/* Desktop Search */}
         <div className="hidden md:flex flex-1 mx-8">
-          <div className="relative w-full">
+          <form onSubmit={handleSearchSubmit} className="relative w-full">
             <input
               type="text"
               placeholder="Search in XStore"
               className="w-full px-4 py-2 border border-gray-300 rounded-l-md focus:outline-none focus:ring-2 focus:ring-teal-500"
+              value={search} // controlled by context
+              onChange={(e) => setSearch(e.target.value)}
             />
             <button className="absolute right-0 top-0 h-full px-4 bg-teal-600 text-white rounded-r-md hover:bg-teal-700">
               <Search className="h-5 w-5" />
             </button>
-          </div>
+          </form>
         </div>
 
         {/* Desktop Right */}
         <div className="hidden lg:flex items-center space-x-6 relative">
-          {/* ✅ Account / Login */}
           {!user ? (
             <Link to="/login" className="flex items-center space-x-1 text-gray-600 hover:text-teal-600">
               <User className="h-6 w-6" />
@@ -143,7 +151,7 @@ export default function Header() {
               Products
             </Link>
 
-            {/* ✅ Account in Mobile */}
+            {/* Account Mobile */}
             {!user ? (
               <Link to="/login" onClick={toggleMobileMenu} className="flex items-center space-x-2 text-gray-700 hover:text-teal-600">
                 <User className="h-5 w-5" />
