@@ -1,5 +1,11 @@
+
 import { createContext, useContext, useEffect, useState } from "react"
-import axios from "axios"
+import {
+  loginApi,
+  signupApi,
+  logoutApi,
+  fetchMeApi,
+} from "../api/authApi.js"
 
 const AuthContext = createContext()
 
@@ -7,18 +13,14 @@ export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null)
   const [loading, setLoading] = useState(true)
 
-  // Configure axios to send cookies with every request
-  axios.defaults.withCredentials = true
-  axios.defaults.baseURL = "http://localhost:3000/api"
-
-  // Fetch user if already logged in (via refresh token)
+  // Fetch logged-in user
   const fetchUser = async () => {
     try {
-      const res = await axios.get("/user/me")
+      const res = await fetchMeApi()
       setUser(res.data.user)
       return res.data.user
     } catch (err) {
-      console.error("Fetch user failed:", err)
+      console.error("Fetch user failed:", err.response?.data || err.message)
       setUser(null)
     } finally {
       setLoading(false)
@@ -30,19 +32,19 @@ export const AuthProvider = ({ children }) => {
   }, [])
 
   const login = async (email, password) => {
-    const res = await axios.post("/auth/login", { email, password })
-    setUser(res.data.user) // backend sends user info
+    const res = await loginApi(email, password)
+    setUser(res.data.user)
     return res.data.user
   }
 
   const signup = async (data) => {
-    const res = await axios.post("/auth/signup", data)
+    const res = await signupApi(data)
     setUser(res.data.user)
     return res.data.user
   }
 
   const logout = async () => {
-    await axios.post("/auth/logout")
+    await logoutApi()
     setUser(null)
   }
 
