@@ -35,49 +35,86 @@ export default function Products() {
     })
 
   return (
-    <div className="container mx-auto px-4 py-6">
-      <h1 className="text-2xl font-bold mb-4">Products</h1>
+    <div className="container mx-auto px-4 py-8">
+      {/* Header */}
+      <h1 className="text-3xl font-bold mb-6 text-center text-black">
+        🛒 Our Products
+      </h1>
 
-      {/* Filter + Sort */}
-      <div className="flex space-x-4 mb-6">
-        <select
-          value={category}
-          onChange={(e) => setCategory(e.target.value)}
-          className="border px-3 py-2"
-        >
-          <option value="ALL">All Categories</option>
-          <option value="Fashion">Fashion</option>
-          <option value="Gadgets">Gadgets</option>
-        </select>
+      {/* Filter + Sort bar */}
+      <div className="flex flex-col md:flex-row justify-between items-center bg-gray-100 p-4 rounded-lg shadow-sm mb-8 gap-4">
+        <div className="flex gap-4">
+          <select
+            value={category}
+            onChange={(e) => setCategory(e.target.value)}
+            className="border px-3 py-2 rounded-lg focus:outline-none focus:ring-1 "
+          >
+            <option value="ALL">All Categories</option>
+            <option value="Fashion">Fashion</option>
+            <option value="Gadgets">Gadgets</option>
+          </select>
 
-        <select
-          value={sort}
-          onChange={(e) => setSort(e.target.value)}
-          className="border px-3 py-2"
-        >
-          <option value="none">Default</option>
-          <option value="low-high">Price: Low to High</option>
-          <option value="high-low">Price: High to Low</option>
-        </select>
+          <select
+            value={sort}
+            onChange={(e) => setSort(e.target.value)}
+            className="border px-3 py-2 rounded-lg focus:outline-none focus:ring-1 "
+          >
+            <option value="none">Default</option>
+            <option value="low-high">Price: Low to High</option>
+            <option value="high-low">Price: High to Low</option>
+          </select>
+        </div>
+
+        <p className="text-gray-600 font-medium">
+          {filteredProducts.length} items found
+        </p>
       </div>
 
       {/* Product List */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
         {filteredProducts.length > 0 ? (
           filteredProducts.map((p) => (
-            <div key={p.id} className="border p-4 rounded-lg shadow-sm">
+            <div
+              key={p.id}
+              className="relative border rounded-xl shadow-md hover:shadow-xl transition bg-white p-4 flex flex-col"
+            >
               <img
                 src={p.image}
                 alt={p.name}
-                className="h-40 w-full object-cover mb-3"
+                className="h-44 w-full object-cover mb-3 rounded-md"
               />
-              <h2 className="text-lg font-semibold">{p.name}</h2>
-              <p className="text-gray-600">${p.price}</p>
-              <p className="text-sm text-gray-500">{p.category?.name || "Unknown"}</p>
+              <h2 className="text-lg font-semibold line-clamp-2 text-gray-800">
+                {p.name}
+              </h2>
+
+              {/* Only Price */}
+              <div className="mt-2">
+                <span className="text-red-600 font-bold text-lg">
+                  {p.price} ৳
+                </span>
+              </div>
+
+              <p className="text-sm text-gray-500 mt-1">
+                {p.category?.name || "Unknown"}
+              </p>
+
+              {/* Buttons */}
+              <div className="flex gap-2 mt-auto pt-4">
+                <button className="flex-1 bg-black text-white py-2 rounded-lg hover:bg-gray-800 transition">
+                  Buy Now
+                </button>
+                <button className="flex-1 border border-gray-300 py-2 rounded-lg hover:bg-gray-100 transition">
+                  Add to Cart
+                </button>
+              </div>
             </div>
           ))
         ) : (
-          <p>No products found.</p>
+          <div className="col-span-full flex justify-center">
+            <p className="text-gray-500 text-lg font-medium">
+               No products found.
+            </p>
+          </div>
         )}
       </div>
     </div>
