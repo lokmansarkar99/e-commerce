@@ -20,7 +20,7 @@ export const AuthProvider = ({ children }) => {
       setUser(res.data.user)
       return res.data.user
     } catch (err) {
-      console.error("Fetch user failed:", err.response?.data || err.message)
+      // console.error("Fetch user failed:", err.response?.data || err.message)
       setUser(null)
     } finally {
       setLoading(false)

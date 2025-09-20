@@ -1,38 +1,36 @@
-import { useEffect, useState } from "react"
-import { getProducts } from "../../api/productApi"
-import { useSearch } from "../../context/SearchContext"
+import { useEffect, useState } from "react";
+import { getProducts } from "../../api/productApi";
+import { useSearch } from "../../context/SearchContext";
+
+import { Link } from "react-router";
 
 export default function Products() {
-  const [products, setProducts] = useState([])
-  const [category, setCategory] = useState("ALL")
-  const [sort, setSort] = useState("none")
-  const { search } = useSearch()
+  const [products, setProducts] = useState([]);
+  const [category, setCategory] = useState("ALL");
+  const [sort, setSort] = useState("none");
+  const { search } = useSearch();
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const data = await getProducts()
-        setProducts(data.products)
+        const data = await getProducts();
+        setProducts(data.products);
       } catch (err) {
-        console.error(err)
+        console.error(err);
       }
-    }
-    fetchData()
-  }, [])
+    };
+    fetchData();
+  }, []);
 
   // Filtering, Sorting, Searching
   const filteredProducts = products
-    .filter((p) =>
-      p.name.toLowerCase().includes(search.toLowerCase())
-    )
-    .filter((p) =>
-      category === "ALL" ? true : p.category?.name === category
-    )
+    .filter((p) => p.name.toLowerCase().includes(search.toLowerCase()))
+    .filter((p) => (category === "ALL" ? true : p.category?.name === category))
     .sort((a, b) => {
-      if (sort === "low-high") return a.price - b.price
-      if (sort === "high-low") return b.price - a.price
-      return 0
-    })
+      if (sort === "low-high") return a.price - b.price;
+      if (sort === "high-low") return b.price - a.price;
+      return 0;
+    });
 
   return (
     <div className="container mx-auto px-4 py-8">
@@ -78,14 +76,19 @@ export default function Products() {
               key={p.id}
               className="relative border rounded-xl shadow-md hover:shadow-xl transition bg-white p-4 flex flex-col"
             >
-              <img
-                src={p.image}
-                alt={p.name}
-                className="h-44 w-full object-cover mb-3 rounded-md"
-              />
-              <h2 className="text-lg font-semibold line-clamp-2 text-gray-800">
-                {p.name}
-              </h2>
+              <Link to={`/product/${p.id}`}>
+                <img
+                  src={p.image}
+                  alt={p.name}
+                  className="h-44 w-full object-cover mb-3 rounded-md"
+                />
+              </Link>
+
+              <Link to={`/product/${p.id}`}>
+                <h2 className="text-lg font-semibold line-clamp-2 text-gray-800">
+                  {p.name}
+                </h2>
+              </Link>
 
               {/* Only Price */}
               <div className="mt-2">
@@ -112,11 +115,11 @@ export default function Products() {
         ) : (
           <div className="col-span-full flex justify-center">
             <p className="text-gray-500 text-lg font-medium">
-               No products found.
+              No products found.
             </p>
           </div>
         )}
       </div>
     </div>
-  )
+  );
 }

@@ -4,7 +4,7 @@ import api from "./axiosInstance"
 // Get all products
 export const getProducts = async () => {
   const res = await api.get("/product")
-  console.log(res.data)
+  // console.log(res.data)
   return res.data
   
 }
