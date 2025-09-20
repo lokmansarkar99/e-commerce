@@ -1,14 +1,16 @@
 import { useEffect, useState } from "react";
 import { getProducts } from "../../api/productApi";
 import { useSearch } from "../../context/SearchContext";
-
+import { useCart } from "../../context/CartContext";
 import { Link } from "react-router";
 
 export default function Products() {
   const [products, setProducts] = useState([]);
   const [category, setCategory] = useState("ALL");
   const [sort, setSort] = useState("none");
+  const [message, setMessage] = useState(""); //  success message
   const { search } = useSearch();
+  const { addToCart } = useCart(); //  use cart
 
   useEffect(() => {
     const fetchData = async () => {
@@ -32,12 +34,26 @@ export default function Products() {
       return 0;
     });
 
+  //  Handle Add to Cart
+  const handleAddToCart = (product) => {
+    addToCart(product);
+    setMessage(` ${product.name} added to cart!`);
+    setTimeout(() => setMessage(""), 3000);
+  };
+
   return (
     <div className="container mx-auto px-4 py-8">
-      {/* Header */}
+      {/* Page Title */}
       <h1 className="text-3xl font-bold mb-6 text-center text-black">
-        🛒 Our Products
+         Our Products
       </h1>
+
+      {/*  Success Message */}
+      {message && (
+        <div className="mb-6 p-3 text-center bg-green-100 text-green-700 border border-green-300 rounded-lg shadow">
+          {message}
+        </div>
+      )}
 
       {/* Filter + Sort bar */}
       <div className="flex flex-col md:flex-row justify-between items-center bg-gray-100 p-4 rounded-lg shadow-sm mb-8 gap-4">
@@ -45,7 +61,7 @@ export default function Products() {
           <select
             value={category}
             onChange={(e) => setCategory(e.target.value)}
-            className="border px-3 py-2 rounded-lg focus:outline-none focus:ring-1 "
+            className="border px-3 py-2 rounded-lg focus:outline-none focus:ring-1"
           >
             <option value="ALL">All Categories</option>
             <option value="Fashion">Fashion</option>
@@ -55,7 +71,7 @@ export default function Products() {
           <select
             value={sort}
             onChange={(e) => setSort(e.target.value)}
-            className="border px-3 py-2 rounded-lg focus:outline-none focus:ring-1 "
+            className="border px-3 py-2 rounded-lg focus:outline-none focus:ring-1"
           >
             <option value="none">Default</option>
             <option value="low-high">Price: Low to High</option>
@@ -90,7 +106,7 @@ export default function Products() {
                 </h2>
               </Link>
 
-              {/* Only Price */}
+              {/* Price */}
               <div className="mt-2">
                 <span className="text-red-600 font-bold text-lg">
                   {p.price} ৳
@@ -106,7 +122,10 @@ export default function Products() {
                 <button className="flex-1 bg-black text-white py-2 rounded-lg hover:bg-gray-800 transition">
                   Buy Now
                 </button>
-                <button className="flex-1 border border-gray-300 py-2 rounded-lg hover:bg-gray-100 transition">
+                <button
+                  onClick={() => handleAddToCart(p)}
+                  className="flex-1 border border-gray-300 py-2 rounded-lg hover:bg-gray-100 transition"
+                >
                   Add to Cart
                 </button>
               </div>
