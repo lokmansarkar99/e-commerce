@@ -1,15 +1,16 @@
 import { useEffect, useState } from "react";
-import { useParams } from "react-router";
+import { useParams, useNavigate } from "react-router"; 
 import { getProductById } from "../../api/productApi";
 import { useCart } from "../../context/CartContext";
 
 export default function ProductDetails() {
-  const { productId } = useParams(); 
+  const { productId } = useParams();
   const [product, setProduct] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [message, setMessage] = useState(""); // 
+  const [message, setMessage] = useState("");
 
   const { addToCart } = useCart();
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchProduct = async () => {
@@ -22,19 +23,25 @@ export default function ProductDetails() {
         setLoading(false);
       }
     };
-
     fetchProduct();
   }, [productId]);
 
-  //  Handle add to cart with message
   const handleAddToCart = () => {
     addToCart(product);
-    setMessage(` ${product.name}  added to cart successfully!  ` );
-    setTimeout(() => setMessage(""), 3000); // hide after 3 sec
+    setMessage(`Item added to cart successfully!`);
+    setTimeout(() => setMessage(""), 3000);
   };
 
-  if (loading) return <p className="text-center py-6 text-gray-500">Loading...</p>;
-  if (!product) return <p className="text-center py-6 text-red-500">Product not found!</p>;
+  //  Handle Buy Now
+  const handleBuyNow = () => {
+    localStorage.setItem("buyNowProduct", JSON.stringify(product));
+    navigate("/checkout");
+  };
+
+  if (loading)
+    return <p className="text-center py-6 text-gray-500">Loading...</p>;
+  if (!product)
+    return <p className="text-center py-6 text-red-500">Product not found!</p>;
 
   return (
     <div className="max-w-6xl mx-auto p-6 grid md:grid-cols-2 gap-10">
@@ -50,12 +57,16 @@ export default function ProductDetails() {
       {/* Right: Details Section */}
       <div className="flex flex-col justify-between">
         <div>
-          <h1 className="text-4xl font-extrabold mb-3 text-gray-900">{product.name}</h1>
-          <p className="text-gray-600 mb-5 leading-relaxed">{product.description}</p>
+          <h1 className="text-4xl font-extrabold mb-3 text-gray-900">
+            {product.name}
+          </h1>
+          <p className="text-gray-600 mb-5 leading-relaxed">
+            {product.description}
+          </p>
 
           <div className="mb-5">
             <span className="text-3xl font-bold text-blue-600">
-              ${product.price.toFixed(2)}
+              ৳{product.price}
             </span>
           </div>
 
@@ -63,22 +74,24 @@ export default function ProductDetails() {
             <span className="font-medium text-gray-700">Availability: </span>
             <span
               className={`${
-                product.stock > 0 ? "text-green-600 font-semibold" : "text-red-600 font-semibold"
+                product.stock > 0
+                  ? "text-green-600 font-semibold"
+                  : "text-red-600 font-semibold"
               }`}
             >
-              {product.stock > 0 ? `${product.stock} in stock` : "Out of Stock"}
+              {product.stock > 0
+                ? `${product.stock} in stock`
+                : "Out of Stock"}
             </span>
           </p>
         </div>
 
-        {/* Success message */}
         {message && (
           <div className="mb-4 p-3 rounded-lg bg-green-100 text-green-700 border border-green-300 shadow">
             {message}
           </div>
         )}
 
-        {/* Action Buttons */}
         <div className="flex flex-col sm:flex-row gap-4 mt-6">
           <button
             onClick={handleAddToCart}
@@ -88,9 +101,11 @@ export default function ProductDetails() {
             Add to Cart
           </button>
 
+          {/* ✅ Updated Buy Now */}
           <button
+            onClick={handleBuyNow}
             disabled={product.stock <= 0}
-            className="flex-1 bg-green-600 text-white px-6 py-3 rounded-xl font-semibold shadow hover:bg-green-700 transition disabled:bg-gray-400 disabled:cursor-not-allowed"
+            className="flex-1 bg-black text-white px-6 py-3 rounded-lg hover:bg-gray-800 disabled:bg-gray-400 transition"
           >
             Buy Now
           </button>

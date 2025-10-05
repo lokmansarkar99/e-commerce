@@ -2,15 +2,16 @@ import { useEffect, useState } from "react";
 import { getProducts } from "../../api/productApi";
 import { useSearch } from "../../context/SearchContext";
 import { useCart } from "../../context/CartContext";
-import { Link } from "react-router";
+import { Link, useNavigate } from "react-router"; 
 
 export default function Products() {
   const [products, setProducts] = useState([]);
   const [category, setCategory] = useState("ALL");
   const [sort, setSort] = useState("none");
-  const [message, setMessage] = useState(""); //  success message
+  const [message, setMessage] = useState("");
   const { search } = useSearch();
-  const { addToCart } = useCart(); //  use cart
+  const { addToCart } = useCart();
+  const navigate = useNavigate(); 
 
   useEffect(() => {
     const fetchData = async () => {
@@ -34,28 +35,32 @@ export default function Products() {
       return 0;
     });
 
-  //  Handle Add to Cart
+  // Add to Cart
   const handleAddToCart = (product) => {
     addToCart(product);
-    setMessage(` ${product.name} added to cart!`);
+    setMessage(`Item added to cart successfully!`);
     setTimeout(() => setMessage(""), 3000);
+  };
+
+  // ✅ New: Handle Buy Now
+  const handleBuyNow = (product) => {
+    localStorage.setItem("buyNowProduct", JSON.stringify(product));
+    navigate("/checkout");
   };
 
   return (
     <div className="container mx-auto px-4 py-8">
-      {/* Page Title */}
       <h1 className="text-3xl font-bold mb-6 text-center text-black">
-         Our Products
+        Our Products
       </h1>
 
-      {/*  Success Message */}
       {message && (
         <div className="mb-6 p-3 text-center bg-green-100 text-green-700 border border-green-300 rounded-lg shadow">
           {message}
         </div>
       )}
 
-      {/* Filter + Sort bar */}
+      {/* Filter + Sort */}
       <div className="flex flex-col md:flex-row justify-between items-center bg-gray-100 p-4 rounded-lg shadow-sm mb-8 gap-4">
         <div className="flex gap-4">
           <select
@@ -106,7 +111,6 @@ export default function Products() {
                 </h2>
               </Link>
 
-              {/* Price */}
               <div className="mt-2">
                 <span className="text-red-600 font-bold text-lg">
                   {p.price} ৳
@@ -117,11 +121,15 @@ export default function Products() {
                 {p.category?.name || "Unknown"}
               </p>
 
-              {/* Buttons */}
               <div className="flex gap-2 mt-auto pt-4">
-                <button className="flex-1 bg-black text-white py-2 rounded-lg hover:bg-gray-800 transition">
+                {/* ✅ Updated Buy Now button */}
+                <button
+                  onClick={() => handleBuyNow(p)}
+                  className="flex-1 bg-black text-white py-2 rounded-lg hover:bg-gray-800 transition"
+                >
                   Buy Now
                 </button>
+
                 <button
                   onClick={() => handleAddToCart(p)}
                   className="flex-1 border border-gray-300 py-2 rounded-lg hover:bg-gray-100 transition"
