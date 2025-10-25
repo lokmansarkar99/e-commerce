@@ -8,7 +8,7 @@ export const loginApi = (email, password) => {
 
 // Signup
 export const signupApi = (data) => {
-    return api.post("/auth/signup", data)
+    return api.post("/auth/register", data)
 }
 
 // Logout
